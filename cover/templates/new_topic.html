@@ -12,6 +12,8 @@
   <form method="post" novalidate>
     {% csrf_token %}
     {% include 'includes/form.html' %}
-    <button type="submit" class="btn btn-success">Post</button>
+    <button type="submit" class="btn btn-outline-success">
+    	<i class="fa fa-check"></i> Post
+    </button>
   </form>
 {% endblock %}

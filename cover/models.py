@@ -41,6 +41,10 @@ class SchoolProfile(models.Model):
         return StudentProfile.objects.filter(school=self)
 
 
+def user_image_path(instance, filename):
+    return 'images/{0}_{1}'.format(instance.user, filename)
+
+
 class StudentProfile(models.Model):
     gender_choices = (
         ('M', 'Male'),

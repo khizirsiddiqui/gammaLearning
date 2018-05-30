@@ -12,12 +12,18 @@
 {% endblock %}
 
 {% block content %}
-  <h1>
-    {{ board.name }}
-  </h1>
-  <div class="mb-4">
-    <a href="{% url 'new_topic' board.pk %}" class="btn btn-primary">New topic</a>
+<div class="row">
+  <div class="col-12">
+    <h1>
+      {{ board.name }}
+      <a href="{% url 'new_topic' board.pk %}" class="btn btn-outline-info float-right">
+        <i class="fa fa-plus"></i> New topic
+      </a>
+    </h1>
+    
   </div>
+</div>
+<div class="row">
   <table class="table">
     <thead class="thead-inverse bg-dark">
       <tr>
@@ -41,4 +47,5 @@
     </tbody>
   </table>
   {% include 'includes/pagination.html' %}
+</div>
 {% endblock %}

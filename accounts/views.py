@@ -20,7 +20,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView
 
 from cover.models import StudentProfile, SchoolProfile, Topic
-from .forms import SignUpForm, UserForm
+from .forms import SignUpForm, UserForm, StudentProfileForm
 
 # Create your views here.
 
@@ -28,29 +28,22 @@ from .forms import SignUpForm, UserForm
 @login_required
 def edit_user(request, pk):
     user = get_object_or_404(User, pk=pk)
-    user_form = UserForm(instance=user)
-    ProfileInlineFormset = inlineformset_factory(
-        User, StudentProfile, fields=('bio', 'gender', 'school'))
-    formset = ProfileInlineFormset(instance=user)
+    user_form = UserForm(instance=user, prefix='user')
+    profile = get_object_or_404(StudentProfile, user=user)
+    profile_form = StudentProfileForm(instance=profile, prefix='profile')
 
     if request.user.id == user.id:
         if request.method == 'POST':
-            user_form = UserForm(request.POST, request.FILES, instance=user)
-            formset = ProfileInlineFormset(
-                request.POST, request.FILES, instance=user)
-
-            if user_form.is_valid():
-                created_user = user_form.save(commit=False)
-                formset = ProfileInlineFormset(
-                    request.POST, request.FILES, instance=created_user)
-
-                if formset.is_valid():
-                    created_user.save()
-                    formset.save()
-                    messages.add_message(
-                        request, messages.SUCCESS, 'Yay! Profile Updated')
-                    return redirect('home')
-        return render(request, 'my_account.html', {'form': user_form, 'formset': formset})
+            user_form = UserForm(request.POST, prefix='user', instance=user)
+            profile_form = StudentProfileForm(
+                request.POST, request.FILES, prefix='profile', instance=profile)
+            if user_form.is_valid() and profile_form.is_valid():
+                user = user_form.save()
+                profile = profile_form.save()
+                messages.add_message(
+                    request, messages.SUCCESS, 'Yay! Profile Updated')
+                return redirect('home')
+        return render(request, 'my_account.html', {'form': user_form, 'form_2': profile_form})
     else:
         raise PermissionDenied
 

@@ -24,7 +24,8 @@ def homePage(request):
     boards = Board.objects.all()
     quote = img_quotes()
     word = rand_word()
-    news = get_news()
+    ## news = get_news()
+    news = None
     return render(request, 'index.html', {'boards': boards, 'quote': quote, 'word': word, 'news': news, })
 
 
@@ -126,7 +127,7 @@ def reply_topic(request, pk, topic_pk):
             if post.created_by.username != topic.starter.username:
                 topic_notif = post.created_by.username + ' replied to ' + topic.subject
                 notif = Notification(
-                    user=topic.starter, message=topic_notif, level=2, link=topic_url)
+                    user=topic.starter, message=topic_notif, level=2, link=topic_url, fa_type='fa-edit')
                 notif.save()
 
             messages.add_message(request, messages.SUCCESS,
@@ -166,6 +167,12 @@ def post_upvote(request, pk):
     if user.is_authenticated:
         dec = post.upvote(user)
         if dec == 1:
+            topic_notif = user.username + ' Upvoted your post in ' + post.topic.subject
+            topic_url = reverse('topic_posts', kwargs={
+                                'pk': post.topic.board.pk, 'topic_pk': post.topic.pk})
+            notif = Notification(
+                    user=post.created_by, message=topic_notif, level=2, link=topic_url, fa_type='fa-seedling')
+            notif.save()
             messages.add_message(
                 request, messages.SUCCESS, 'Post Upvoted')
         elif dec == 2:

@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 
+{% load form_tags widget_tweaks %}
+{% load gravatar %}
+
 {% block title %}My account{% endblock %}
 
 {% block breadcrumb %}
@@ -7,16 +10,66 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-      <form method="post" novalidate>
+  <form method="post">
         {% csrf_token %}
-        {% include 'includes/form.html' %}
-        <hr>
-        {{ formset.management_form }}
-        {{ formset.as_p }}
-        <button type="submit" class="btn btn-success">Save changes</button>
-      </form>
-    </div>
-  </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Basic Information:</h5>
+            <p class="card-text">
+              <div class="row">
+                <div class="col-10">
+                  {% include 'includes/form.html' %}
+                </div>
+                <div class="col-2">
+                  <img src="{{ request.user|gravatar }}" alt="{{ request.user.username }}" height="150" size=150>
+                </div>
+              </div>
+            </p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+              Additional Information:
+            </h5>
+            <p class="card-text">
+            {% if form_2.non_field_errors %}
+              <div class="alert alert-danger" role="alert">
+                {% for error in form_2.non_field_errors %}
+                  <p {% if forloop.last %}class="mb-0"{% endif %}>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+            {% for field in form_2 %}
+              <div class="form-group">
+                <b>{{ field.label_tag }}</b>
+                {% if form.is_bound %}
+                  {% if field.errors %}
+                    {% render_field field class=field|input_class %}
+                    {% for error in field.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {% render_field field class="form-control is-valid" %}
+                  {% endif %}
+                {% else %}
+                  {% render_field field class="form-control" %}
+                {% endif %}
+
+                {% if field.help_text %}
+                  <small class="form-text text-muted">
+                    {{ field.help_text|safe }}
+                  </small>
+                {% endif %}
+              </div>
+            {% endfor %}
+            </p>
+          </div>
+        </div>
+        <div class="card">
+          <button type="submit" class="btn btn-success">Save changes</button>
+        </div>
+  </form>
 {% endblock %}

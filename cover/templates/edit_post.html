@@ -13,7 +13,11 @@
   <form method="post" class="mb-4" novalidate>
     {% csrf_token %}
     {% include 'includes/form.html' %}
-    <button type="submit" class="btn btn-success">Save changes</button>
-    <a href="{% url 'topic_posts' post.topic.board.pk post.topic.pk %}" class="btn btn-outline-secondary" role="button">Cancel</a>
+    <button type="submit" class="btn btn-outline-success">
+      <i class="fa fa-check"></i> Save changes
+    </button>
+    <a href="{% url 'topic_posts' post.topic.board.pk post.topic.pk %}" class="btn btn-outline-danger" role="button">
+      <i class="fa fa-ban"></i> Cancel
+    </a>
   </form>
 {% endblock %}

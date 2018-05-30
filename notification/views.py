@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 import json
 
 from .models import Notification
-# Create your views here.
 
 
 def user_notification(request):
@@ -27,5 +26,5 @@ def user_notification(request):
 def notification_list(request):
     notif_list = Notification.objects.filter(user=request.user)
     for notif in notif_list:
-        notif.mark_as_read
+        notif.mark_as_read()
     return render(request, 'notification_list.html', {'notif_list': notif_list, })
