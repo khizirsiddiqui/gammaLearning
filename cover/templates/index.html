@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block breadcrumb %}
+  	<li class="breadcrumb-item active">Boards</li>
+{% endblock %}
+{% block content %}
+<div class="row">
+<div class="col-3">
+  <div class="card">
+    <img class="card-img-top" src="{{ quote.image }}" alt="">
+    <div class="card-body">
+      <h5 class="card-title">{{ quote.author }}</h5>
+      <p class="card-text">
+        <i class="fas fa-quote-left fa-2x fa-pull-left fa-border"></i>{{ quote.quote }}
+      </p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Word: <b>{{ word.txt }}</b></h5>
+      <p class="card-text">Definition: {{ word.define }}</p>
+      <p class="card-text">Usage: {{ word.example }}</p>
+    </div>
+  </div>
+</div>
+<div class="col-9">
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <table class="table table-hover">
+        <thead class="thead-dark">
+          <tr>
+            <th>Board</th>
+            <th>Posts</th>
+            <th>Topics</th>
+            <th>Last Post</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for board in boards %}
+            <tr>
+              <td>
+                <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
+                <small class="text-muted d-block">{{ board.description }}</small>
+              </td>
+              <td class="align-middle">{{ board.get_posts_count }}</td>
+              <td class="align-middle">{{ board.topics.count }}</td>
+              <td>
+            {% with post=board.get_last_post %}
+            {% if post %}
+              <small>
+              <a href="{% url 'topic_posts' board.pk post.topic.pk %}">
+                    By {{ post.created_by.username }} - {{ post.created_at|naturaltime }}
+                  </a>
+                </small>
+            {% else %}
+              <small class="text-muted">
+              <em>No posts yet.</em>
+              </small>
+            {% endif %}
+            {% endwith %}
+             </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">News Headlines:</h5>
+        <p class="card-text">
+          <ul class="list-group list-group-flush">
+          {% for data in news %}
+            <li class="list-group-item">
+              {{ data.title }} - <a href="{{ data.url }}">{{ data.source }}</a>
+            </li>
+          {% endfor %}
+          </ul>
+        </p>
+        <div class="card-footer">Powered by: <a href="https://www.newsapi.org">NewsAPI.org</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load gravatar %}
+
+{% block title %} {{ school.name }} {% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'school_list' %}">Schools</a></li>
+  <li class="breadcrumb-item active">{{ school.name }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-8">
+    <h2>{{ school }}</h2>
+    <p class="">
+      <a href="{{ school.website }}">{{ school.website }}</a>
+    </p>
+  </div>
+  <div class="col-2">
+    <b>Address: </b>
+    <address>
+      {{ school.address }}
+    </address>
+  </div>
+  <div class="col-2">
+    <h6 class="text-info">Points: <em>{{ school.points }}</em></h6>
+    <h6 class="text-info">Students: <em>{{ school.get_student_count }}</em></h6>
+  </div>
+</div>
+<div class="row">
+  <img src="{{ school.image.url }}" class="img-fluid w-100">
+</div>
+<hr>
+<div class="row">
+    <table class="table">
+      <thead class="thead-inverse thead-dark">
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Topics</th>
+          <th>Posts</th>
+          <th>Reputation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in student_list %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td class="align-middle"><a href="{% url 'student_profile' student.pk %}">{{ student.get_name }}</a></td>
+            <td>{{student.get_topic_count}}</td>
+            <td>{{student.get_post_count}}</td>
+            <td>{{ student.reputation }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% include 'includes/pagination.html' %}
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% load gravatar %}
+
+{% block title %} {{ student.name }} {% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+  <li class="breadcrumb-item active">Users</li>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-2">
+    <img class="img-thumbnail" src="{{ student.user|gravatar }}" alt="{{ student.user.get_name }}" height="170px" width="170px">
+    </div>
+    <div class="col-8">
+    <h1>{{ student.get_name }}</h1>
+    <h4><a href="{% url 'school_profile' student.school.pk %}">{{ student.school }}</a></h4>
+    <h6 class="text-info">Reputation: <em>{{ student.reputation }}</em></h6>
+    <a></a>
+    <p><b>Bio: </b>{{ student.bio }}</p>
+    </div>
+    <div class="col-2">
+      Gender: {{ student.gender }}
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <h3>Posts and Replies:</h3>
+    <ul class="list-group-flush">
+    {% for post in recent_posts %}    
+      <li class="list-group-item">
+        Replied <a href="{% url 'topic_posts' post.topic.board.pk post.topic.pk %}"><em>{{post.message}}</em></a> on <em><a href="{% url 'topic_posts' post.topic.board.pk post.topic.pk %}">{{ post.topic }}</a></em> about <em>{{ post.get_last_datetime|naturaltime }}</em>
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+  <div class="row">
+    <h3>Topics: </h3>
+    <ul class="list-group-flush">
+    {% for topic in all_topics %}
+      <li class="list-group-item">
+        <a href="{% url 'topic_posts' topic.board.pk topic.pk %}">{{ topic }}</a> - <span class="text-muted">Last Updated: {{ topic.last_updated|naturaltime }}</span>
+      </li>
+    {% endfor %}
+    </ul>
+  </div>
+  </body>
+</html>
+{% endblock %}

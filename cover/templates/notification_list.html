@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<ul class="list-group list-group-flush">
+	{% for notif in notif_list %}
+	<a href="{{ notif.link }}">
+		<li class="list-group-item"><i class="fa {{ notif.fa_type }}"></i>{{ notif.message }}</li>
+	</a>
+	{% endfor %}
+</ul>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

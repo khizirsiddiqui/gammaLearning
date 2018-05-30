@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block breadcrumb %}
+  	<li class="breadcrumb-item active">Schools</li>
+{% endblock %}
+{% block content %}
+<h1>School</h1>
+<div>
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <table class="table table-hover">
+        <thead class="thead-dark">
+          <tr>
+          	<th></th>
+            <th>School</th>
+            <th>Students</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for school in schools %}
+            <tr>
+              <td>
+              	{{forloop.counter}}
+              </td>
+              <td>
+                <a href="{% url 'school_profile' school.pk %}">{{ school }}</a>
+                <small class="text-muted d-block">{{ board.description }}</small>
+              </td>
+              <td class="align-middle">{{ school.get_student_count }}</td>
+              <td>{{ school.points }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  </div>
+</div>
+    <div>
+      Note: <a class="text-muted">For adding new school mail me here: khizirsiddiqui@gmail.com</a>
+    </div>
+</div>
+{% endblock %}
