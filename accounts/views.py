@@ -71,7 +71,7 @@ def school_profile(request, pk):
 def student_profile(request, pk):
     student = get_object_or_404(StudentProfile, pk=pk)
     recent_posts = student.get_recent_posts()
-    all_topics = Topic.objects.filter(starter=student.user)
+    all_topics = Topic.objects.filter(starter=student.user).order_by('-last_updated')
     return render(request, 'student_profile.html', {'student': student, 'recent_posts': recent_posts,
                                                     'all_topics': all_topics})
 
