@@ -55,7 +55,7 @@ class StudentProfile(models.Model):
     bio = models.TextField(default='', blank=True)
     gender = models.CharField(max_length=1, choices=gender_choices, blank=True)
     school = models.ForeignKey(
-        SchoolProfile, on_delete=models.CASCADE, related_name='school')
+        SchoolProfile, on_delete=models.CASCADE, related_name='school', null=True)
     reputation = models.PositiveIntegerField(default=0)
 
     def rep_update(self):
